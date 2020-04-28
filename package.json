@@ -58,3 +58,6 @@
     "gulp-watch": "^4.3.11"
   }
 }
+"scripts": {
+  "start": "node server.js"
+}
