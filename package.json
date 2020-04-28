@@ -59,5 +59,6 @@
   }
 }
 "scripts": {
-  "start": "node server.js"
-}
+  "start": "heroku-node-settings server/bin/web.js"
+ }
+  }
