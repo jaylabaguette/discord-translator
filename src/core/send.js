@@ -21,21 +21,7 @@ const sendBox = function(data)
 
    if (data.text && data.text.length > 1)
    {
-      data.channel.send({
-         embed: {
-            title: data.title,
-            fields: data.fields,
-            author: data.author,
-            color: colors.get(data.color),
-            description: data.text,
-            footer: data.footer
-         }
-      }).then(() =>
-      {
-         sendEmbeds(data);
-         sendAttachments(data);
-      }).catch(err =>
-      {
+      const errLog = (err) => {
          var errMsg = err;
          logger("dev", err);
 
@@ -75,7 +61,36 @@ const sendBox = function(data)
          }
 
          logger("error", errMsg);
-      });
+      };
+
+      if (data.webhook)
+      {
+         data.webhook.send(data.text, {
+            username: data.author.username,
+            avatarURL: data.author.displayAvatarURL,
+            embeds: data.embeds,
+            files: data.attachments
+         })
+            .catch(errLog);
+      }
+      else
+      {
+         data.channel.send({
+            embed: {
+               title: data.title,
+               fields: data.fields,
+               author: data.author,
+               color: colors.get(data.color),
+               description: data.text,
+               footer: data.footer
+            }
+         }).then(() =>
+         {
+            sendEmbeds(data);
+            sendAttachments(data);
+         }).catch(errLog);
+
+      }
    }
 };
 
@@ -161,7 +176,8 @@ module.exports = function(data)
       attachments: data.message.attachments,
       forward: data.forward,
       origin: null,
-      bot: data.bot
+      bot: data.bot,
+      webhook: null
    };
 
    //
@@ -205,6 +221,16 @@ module.exports = function(data)
             sendData.channel = forwardChannel;
          }
 
+         console.log("DISCORD_WEBHOOK_" + data.forward);
+         if (process.env["DISCORD_WEBHOOK_" + data.forward])
+         {
+            console.log("exists!");
+            const idToken = process.env["DISCORD_WEBHOOK_" + data.forward];
+            sendData.webhook = new discord.WebhookClient(
+               idToken.split("/")[0], idToken.split("/")[1]
+            );
+         }
+
          //
          // Error if bot cannot write to dest
          //
@@ -243,6 +269,7 @@ module.exports = function(data)
       if (data.author)
       {
          sendData.author = data.author;
+         sendData.author.username = data.message.member.displayName;
       }
    }
 
