@@ -57,7 +57,7 @@ To deploy a free translation bot that you can add to your discord server, follow
 * [Translate Last Message](https://github.com/vkedwardli/discord-translator/wiki/Translate-Last-Message)
 * [Translate Channel](https://github.com/vkedwardli/discord-translator/wiki/Translate-Channel-(Automatic))
 * [Settings](https://github.com/vkedwardli/discord-translator/wiki/Settings)
-* [Statistics](https://github.com/vkedwardli/discord-translator/wiki/Get-Statistics)
+* [Statistics (Not working)](https://github.com/vkedwardli/discord-translator/wiki/Get-Statistics)
 
 ## Credits & License
 
