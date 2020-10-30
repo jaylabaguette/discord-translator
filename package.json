@@ -1,12 +1,12 @@
 {
-  "name": "louie",
-  "version": "0.5.3",
+  "name": "discord-translator",
+  "version": "0.6.0",
   "engines": {
     "node": "^14.15.0"
   },
   "description": "Translation bot built using discord.js and Google Translate API.",
   "main": "src/bot.js",
-  "license": "MIT",
+  "license": "Unlicense",
   "scripts": {
     "start": "node build/bot",
     "build": "gulp build",
@@ -14,16 +14,6 @@
     "lint": "gulp lint",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
-  "author": {
-    "name": "Bobby Johnson <bobby.johnson@gmail.com>",
-    "url": "http://iamnotmyself.com"
-  },
-  "contributors": [
-    {
-      "name": "Aziz Natour <azizgfx@gmail.com>",
-      "url": "http://www.aziznatour.com"
-    }
-  ],
   "keywords": [
     "discord",
     "discordjs",
@@ -33,10 +23,7 @@
   ],
   "repository": {
     "type": "git",
-    "url": "https://github.com/NotMyself/Louie.git"
-  },
-  "bugs": {
-    "url": "https://github.com/NotMyself/Louie/issues"
+    "url": "https://github.com/vkedwardli/discord-translator.git"
   },
   "dependencies": {
     "common-tags": "^1.7.2",

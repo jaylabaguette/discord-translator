@@ -137,12 +137,6 @@ const helpMessage = function(config, botname, param)
       args: "setLang to [lang]",
       example: "setLang to italian"
    }) +
-   helpSection({
-      config: config,
-      title: "Report Bugs / Request Features",
-      link: "https://github.com/NotMyself/Louie/issues",
-      icon: ":raising_hand::skin-tone-3:"
-   }) +
    donation;
 
    //
