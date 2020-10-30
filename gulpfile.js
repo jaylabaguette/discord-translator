@@ -18,9 +18,9 @@ gulp.task("compress", function () {
         .pipe(gulp.dest("build/"));
 });
 
-gulp.task('default', ['lint', 'compress']);
+gulp.task('default', gulp.series('lint', 'compress'));
 
-gulp.task('build', ['lint', 'compress']);
+gulp.task('build', gulp.series('lint', 'compress'));
 
 gulp.task('watch', function() {
   gulp.watch('src/**/*.js', ['default']);

@@ -1,82 +1,84 @@
 const autoTranslate = require("./auto");
-const Sequelize = require('sequelize');
+const Sequelize = require("sequelize");
 const logger = require("./logger");
 const Op = Sequelize.Op;
 const db = new Sequelize(process.env.DATABASE_URL, {
-  logging: console.log,
-  //logging: null,
+   logging: console.log
+   //logging: null,
 });
 
 db
-  .authenticate()
-  .then(() => {
-    logger("dev",'Successfully connected to database');
-  })
-  .catch(err => {
-    logger("error", err);
-  });
+   .authenticate()
+   .then(() =>
+   {
+      logger("dev","Successfully connected to database");
+   })
+   .catch(err =>
+   {
+      logger("error", err);
+   });
 
-const Servers = db.define('servers', {
-  id: {
-    type: Sequelize.STRING(32),
-    primaryKey: true,
-		unique: true,
-    allowNull: false,
-	},
-  lang: {
-		type: Sequelize.STRING(8),
-		defaultValue: "en",
-	},
-  count: {
-		type: Sequelize.INTEGER,
-		defaultValue: 0,
-	},
-  active: {
-		type: Sequelize.BOOLEAN,
-		defaultValue: true,
-	},
+const Servers = db.define("servers", {
+   id: {
+      type: Sequelize.STRING(32),
+      primaryKey: true,
+      unique: true,
+      allowNull: false
+   },
+   lang: {
+      type: Sequelize.STRING(8),
+      defaultValue: "en"
+   },
+   count: {
+      type: Sequelize.INTEGER,
+      defaultValue: 0
+   },
+   active: {
+      type: Sequelize.BOOLEAN,
+      defaultValue: true
+   }
 });
 
-const Tasks = db.define('tasks', {
-  origin: Sequelize.STRING(32),
-  dest: Sequelize.STRING(32),
-  reply: Sequelize.STRING(16),
-  server: Sequelize.STRING(32),
-  active: {
-		type: Sequelize.BOOLEAN,
-		defaultValue: true,
-	},
-  lang_to: {
-    type: Sequelize.STRING(8),
-    defaultValue: "en",
-  },
-  lang_from: {
-    type: Sequelize.STRING(8),
-    defaultValue: "en",
-  }
+const Tasks = db.define("tasks", {
+   origin: Sequelize.STRING(32),
+   dest: Sequelize.STRING(32),
+   reply: Sequelize.STRING(16),
+   server: Sequelize.STRING(32),
+   active: {
+      type: Sequelize.BOOLEAN,
+      defaultValue: true
+   },
+   lang_to: {
+      type: Sequelize.STRING(8),
+      defaultValue: "en"
+   },
+   lang_from: {
+      type: Sequelize.STRING(8),
+      defaultValue: "en"
+   }
 },
 {
-    indexes: [
-        {
-            unique: true,
-            fields: ['origin', 'dest']
-        }
-    ]
+   indexes: [
+      {
+         unique: true,
+         fields: ["origin", "dest"]
+      }
+   ]
 });
 
 // -------------------
 // Init/create tables
 // -------------------
 
-exports.initializeDatabase = function() {
+exports.initializeDatabase = function()
+{
+   Servers.sync({ logging: console.log });
+   Tasks.sync({ logging: console.log });
 
-  Servers.sync({ logging: console.log });
-  Tasks.sync({ logging: console.log });
-
-  // Add global server row
-  Servers.upsert({ id: "bot", lang: "en" });
-
-}
+   // Add global server row
+   Servers.upsert({ id: "bot",
+      lang: "en" });
+};
 
 // -----------------------
 // Add Server to Database
@@ -84,13 +86,11 @@ exports.initializeDatabase = function() {
 
 exports.addServer = function(id, lang)
 {
-
-    return Servers.create({
-        id: id,
-        lang: lang
-    });
-
-}
+   return Servers.create({
+      id: id,
+      lang: lang
+   });
+};
 
 // ------------------
 // Deactivate Server
@@ -98,13 +98,12 @@ exports.addServer = function(id, lang)
 
 exports.removeServer = function(id)
 {
-
-  return Servers.update({ active: false }, { where: { id: id } }).then( 
-    function (err, result) {
-      logger("error", err);
-  });
-
-}
+   return Servers.update({ active: false }, { where: { id: id } }).then(
+      function (err, result)
+      {
+         logger("error", err);
+      });
+};
 
 // -------------------
 // Update Server Lang
@@ -112,13 +111,12 @@ exports.removeServer = function(id)
 
 exports.updateServerLang = function(id, lang, cb)
 {
-
-  return Servers.update({ lang: lang }, { where: { id: id } }).then( 
-    function (err, result) {
-      logger("error", err);
-  });
-
-}
+   return Servers.update({ lang: lang }, { where: { id: id } }).then(
+      function (err, result)
+      {
+         logger("error", err);
+      });
+};
 
 // ------------------
 // Get Channel Tasks
@@ -133,40 +131,45 @@ exports.channelTasks = function(data)
       id = "@" + data.message.author.id;
    }
 
-  try {
-    const taskList = Tasks.findAll({ where: { origin: id, active: true }}).then(
-    function (result) {
-      data.rows = result;
+   try
+   {
+      const taskList = Tasks.findAll({ where: { origin: id,
+         active: true }}).then(
+         function (result)
+         {
+            data.rows = result;
+            return autoTranslate(data);
+         });
+   }
+   catch (e)
+   {
+      logger("error", e);
+      data.err = e;
       return autoTranslate(data);
-    });
-  }
-  catch (e) {
-    logger("error", e);
-    data.err = e;
-    return autoTranslate(data);
-  }
-
-}
+   }
+};
 // --------------------------------
 // Get tasks for channel or user
 // --------------------------------
 
 exports.getTasks = function(origin, dest, cb)
 {
-
-   if (dest === "me") {
-        return Tasks.findAll({ where: { origin: origin, dest: dest } }, {raw:true}).then(
-          function (result, err) {
+   if (dest === "me")
+   {
+      return Tasks.findAll({ where: { origin: origin,
+         dest: dest } }, {raw: true}).then(
+         function (result, err)
+         {
             cb(err, result);
-          });
-    }
+         });
+   }
 
-    return Tasks.findAll({ where: { origin: origin } }, {raw:true}).then(
-      function (result, err) {
-        cb(err, result);
+   return Tasks.findAll({ where: { origin: origin } }, {raw: true}).then(
+      function (result, err)
+      {
+         cb(err, result);
       });
-
-}
+};
 
 
 // --------------------------------
@@ -175,20 +178,22 @@ exports.getTasks = function(origin, dest, cb)
 
 exports.checkTask = function(origin, dest, cb)
 {
-
-   if (dest === "all") {
-        return Tasks.findAll({ where: { origin: origin } }, {raw:true}).then(
-          function (result, err) {
+   if (dest === "all")
+   {
+      return Tasks.findAll({ where: { origin: origin } }, {raw: true}).then(
+         function (result, err)
+         {
             cb(err, result);
-          });
-    }
+         });
+   }
 
-    return Tasks.findAll({ where: { origin: origin, dest: dest } }, {raw:true}).then(
-      function (result, err) {
-        cb(err, result);
+   return Tasks.findAll({ where: { origin: origin,
+      dest: dest } }, {raw: true}).then(
+      function (result, err)
+      {
+         cb(err, result);
       });
-
-}
+};
 
 // --------------------
 // Remove Channel Task
@@ -199,18 +204,21 @@ exports.removeTask = function(origin, dest, cb)
    console.log("removeTask()");
    if (dest === "all")
    {
-       console.log("removeTask() - all");
-       return Tasks.destroy({ where: { [Op.or]: [{ origin: origin },{ dest: origin }] } }).then(
-         function (err, result) {
-           cb(null, result);
-         });;
+      console.log("removeTask() - all");
+      return Tasks.destroy({ where: { [Op.or]: [{ origin: origin },{ dest: origin }] } }).then(
+         function (err, result)
+         {
+            cb(null, result);
+         });
    }
 
-   return Tasks.destroy({ where: { [Op.or]: [{ origin: origin, dest: dest },{ origin: dest, dest: origin }] } }).then(
-     function (err, result) {
-       cb(null, result);
-     });;
-
+   return Tasks.destroy({ where: { [Op.or]: [{ origin: origin,
+      dest: dest },{ origin: dest,
+      dest: origin }] } }).then(
+      function (err, result)
+      {
+         cb(null, result);
+      });
 };
 
 // --------------
@@ -219,11 +227,10 @@ exports.removeTask = function(origin, dest, cb)
 
 exports.getTasksCount = function(origin, cb)
 {
-
-  return Tasks.count({ where: {'origin': origin }}).then(c => {
-    cb('', c);
-  });
-
+   return Tasks.count({ where: {"origin": origin }}).then(c =>
+   {
+      cb("", c);
+   });
 };
 
 // ------------------
@@ -232,11 +239,10 @@ exports.getTasksCount = function(origin, cb)
 
 exports.getServersCount = function(cb)
 {
-
-  return Servers.count().then(c => {
-    cb('', c);
-  });
-
+   return Servers.count().then(c =>
+   {
+      cb("", c);
+   });
 };
 
 // ---------
@@ -245,43 +251,41 @@ exports.getServersCount = function(cb)
 
 exports.addTask = function(task)
 {
+   // Tasks.upsert({
+   //   orign: task.origin,
+   //   dest: task.dest,
+   //   reply: task.reply, // + task.origin.slice(-3),
+   //   server: task.server,
+   //   active: true,
+   //   lang_to: task.to,
+   //   lang_from: task.from,
+   // }).then(() => {
+   //   console.log('Task added successfully.');
+   // })
+   // .catch(err => {
+   //   console.error('Unable to add task to the database:', err);
+   // });
 
-  // Tasks.upsert({
-  //   orign: task.origin,
-  //   dest: task.dest,
-  //   reply: task.reply, // + task.origin.slice(-3),
-  //   server: task.server,
-  //   active: true,
-  //   lang_to: task.to,
-  //   lang_from: task.from,
-  // }).then(() => {
-  //   console.log('Task added successfully.');
-  // })
-  // .catch(err => {
-  //   console.error('Unable to add task to the database:', err);
-  // });
 
-
-      task.dest.forEach(dest =>
+   task.dest.forEach(dest =>
+   {
+      Tasks.upsert({
+         origin: task.origin,
+         dest: dest,
+         reply: task.reply, // + task.origin.slice(-3),
+         server: task.server,
+         active: true,
+         lang_to: task.to,
+         lang_from: task.from
+      }).then(() =>
       {
-
-        Tasks.upsert({
-          origin: task.origin,
-          dest: dest,
-          reply: task.reply, // + task.origin.slice(-3),
-          server: task.server,
-          active: true,
-          lang_to: task.to,
-          lang_from: task.from,
-        }).then(() => {
-          logger("dev", 'Task added successfully.');
-        })
-        .catch(err => {
-          logger("error", err);
-        });
-
-      });
-
+         logger("dev", "Task added successfully.");
+      })
+         .catch(err =>
+         {
+            logger("error", err);
+         });
+   });
 };
 
 // ------------
@@ -290,7 +294,7 @@ exports.addTask = function(task)
 
 exports.increaseServers = function(id)
 {
-  return Servers.increment('count', { where: { id: id }});
+   return Servers.increment("count", { where: { id: id }});
 };
 
 // --------------
@@ -299,8 +303,7 @@ exports.increaseServers = function(id)
 
 exports.getStats = function(cb)
 {
-
-  return db.query(`select * from (select sum(count) as "totalCount", ` +
+   return db.query(`select * from (select sum(count) as "totalCount", ` +
   `count(id)-1 as "totalServers" from servers) as table1, ` +
   `(select count(id)-1 as "activeSrv" from servers where active = TRUE) as table2, ` +
   `(select lang as "botLang" from servers where id = 'bot') as table3, ` +
@@ -308,11 +311,11 @@ exports.getStats = function(cb)
   `from tasks where active = TRUE) as table4, ` +
   `(select count(distinct origin) as "activeUserTasks" ` +
   `from tasks where active = TRUE and origin like '@%') as table5;`, { type: Sequelize.QueryTypes.SELECT}).then(
-      function(result) {
-        cb(null, result);
+      function(result)
+      {
+         cb(null, result);
       }
-    );
-
+   );
 };
 
 // ----------------
@@ -321,17 +324,17 @@ exports.getStats = function(cb)
 
 exports.getServerInfo = function(id, cb)
 {
-
-  return db.query( `select * from (select count as "count",` +
+   return db.query(`select * from (select count as "count",` +
    `lang as "lang" from servers where id = ?) as table1,` +
    `(select count(distinct origin) as "activeTasks"` +
    `from tasks where server = ?) as table2,` +
    `(select count(distinct origin) as "activeUserTasks"` +
-   `from tasks where origin like '@%' and server = ?) as table3;`, { replacements: [ id, id, id], type: db.QueryTypes.SELECT}).then( 
-    function (result) {
-      cb(null, result);
-  });
-   
+   `from tasks where origin like '@%' and server = ?) as table3;`, { replacements: [ id, id, id],
+      type: db.QueryTypes.SELECT}).then(
+      function (result)
+      {
+         cb(null, result);
+      });
 };
 
 // ---------
