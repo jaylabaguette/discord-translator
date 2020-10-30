@@ -8,6 +8,7 @@ const discord = require("discord.js");
 // Send Data to Channel
 //
 
+// eslint-disable-next-line complexity
 const sendBox = function(data)
 {
    if (data.author)
@@ -65,11 +66,32 @@ const sendBox = function(data)
 
       if (data.webhook)
       {
+         var msgattachments = data.attachments.array();
+         var attachments = [];
+         const maxAtt = data.config.maxEmbeds;
+         if (msgattachments.length > maxAtt)
+         {
+            sendBox({
+               channel: data.channel,
+               text: `:warning:  Cannot attach more than ${maxAtt} files.`,
+               color: "warn"
+            });
+            msgattachments = msgattachments.slice(0, maxAtt);
+         }
+
+         for (let i = 0; i < msgattachments.length; i++)
+         {
+            const attachmentObj = new discord.Attachment(
+               msgattachments[i].url,
+               msgattachments[i].filename
+            );
+            attachments.push(attachmentObj);
+         }
          data.webhook.send(data.text, {
-            username: data.author.username,
-            avatarURL: data.author.displayAvatarURL,
+            username: data.author.name,
+            avatarURL: data.author.icon_url,
             embeds: data.embeds,
-            files: data.attachments
+            files: attachments
          })
             .catch(errLog);
       }
@@ -89,7 +111,6 @@ const sendBox = function(data)
             sendEmbeds(data);
             sendAttachments(data);
          }).catch(errLog);
-
       }
    }
 };
@@ -221,10 +242,8 @@ module.exports = function(data)
             sendData.channel = forwardChannel;
          }
 
-         console.log("DISCORD_WEBHOOK_" + data.forward);
          if (process.env["DISCORD_WEBHOOK_" + data.forward])
          {
-            console.log("exists!");
             const idToken = process.env["DISCORD_WEBHOOK_" + data.forward];
             sendData.webhook = new discord.WebhookClient(
                idToken.split("/")[0], idToken.split("/")[1]
