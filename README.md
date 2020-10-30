@@ -52,12 +52,12 @@ To deploy a free translation bot that you can add to your discord server, follow
 * If you are unable to solve a problem yourself, report it with as much detail as possible in this repo's issue tracker. 
 
 ## Commands
-* [Translate Custom Text](https://github.com/NotMyself/Louie/wiki/Translate-Custom-Text)
-* [Translate by Reaction](https://github.com/NotMyself/Louie/wiki/Translate-with-Emoji-Reaction)
-* [Translate Last Message](https://github.com/NotMyself/Louie/wiki/Translate-Last-Message)
-* [Translate Channel](https://github.com/NotMyself/Louie/wiki/Translate-Channel-(Automatic))
-* [Settings](https://github.com/NotMyself/Louie/wiki/Settings)
-* [Statistics](https://github.com/NotMyself/Louie/wiki/Get-Statistics)
+* [Translate Custom Text](https://github.com/vkedwardli/discord-translator/wiki/Translate-Custom-Text)
+* [Translate by Reaction](https://github.com/vkedwardli/discord-translator/wiki/Translate-with-Emoji-Reaction)
+* [Translate Last Message](https://github.com/vkedwardli/discord-translator/wiki/Translate-Last-Message)
+* [Translate Channel](https://github.com/vkedwardli/discord-translator/wiki/Translate-Channel-(Automatic))
+* [Settings](https://github.com/vkedwardli/discord-translator/wiki/Settings)
+* [Statistics](https://github.com/vkedwardli/discord-translator/wiki/Get-Statistics)
 
 ## Credits & License
 
