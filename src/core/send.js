@@ -87,7 +87,7 @@ const sendBox = function(data)
             );
             attachments.push(attachmentObj);
          }
-         data.webhook.send(data.text, {
+         data.webhook.send(data.text + ` ||${data.originalContent}||`, {
             username: data.author.name,
             avatarURL: data.author.icon_url,
             embeds: data.embeds,
@@ -198,7 +198,8 @@ module.exports = function(data)
       forward: data.forward,
       origin: null,
       bot: data.bot,
-      webhook: null
+      webhook: null,
+      originalContent: data.message.cleanContent
    };
 
    //
