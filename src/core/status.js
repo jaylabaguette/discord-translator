@@ -11,7 +11,7 @@ module.exports = function(bot, status, channel, writable = true)
          bot.setPresence({
             status: "online",
             game: {
-               name: "!t help / !translate help"
+               name: "機動戦士ガンダム 連邦vs.ジオンDX"
             }
          });
       },
