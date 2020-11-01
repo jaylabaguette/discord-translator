@@ -277,14 +277,37 @@ exports.addTask = function(task)
          active: true,
          lang_to: task.to,
          lang_from: task.from
-      }).then(() =>
-      {
-         logger("dev", "Task added successfully.");
       })
+         .then(() =>
+         {
+            logger("dev", "Task added successfully.");
+         })
          .catch(err =>
          {
             logger("error", err);
          });
+
+      //Reply from Direct Message, lang and origin/dest flipped
+      if (dest.startsWith("@"))
+      {
+         Tasks.upsert({
+            origin: dest,
+            dest: task.origin,
+            reply: task.reply + task.origin.slice(-3),
+            server: task.server,
+            active: true,
+            lang_to: task.from,
+            lang_from: task.to
+         })
+            .then(() =>
+            {
+               logger("dev", "Task added successfully.");
+            })
+            .catch(err =>
+            {
+               logger("error", err);
+            });
+      }
    });
 };
 
