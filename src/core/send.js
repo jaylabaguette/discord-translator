@@ -64,6 +64,9 @@ const sendBox = function(data)
          logger("error", errMsg);
       };
 
+      //fix CJK translated mention tag
+      data.text = data.text.replace("<@！", "<@!");
+
       if (data.webhook)
       {
          var msgattachments = data.attachments.array();
