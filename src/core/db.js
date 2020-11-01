@@ -98,11 +98,13 @@ exports.addServer = function(id, lang)
 
 exports.removeServer = function(id)
 {
-   return Servers.update({ active: false }, { where: { id: id } }).then(
-      function (err, result)
-      {
-         logger("error", err);
-      });
+   return Servers.update({ active: false }, { where: { id: id } })
+      .then(() =>
+         console.log("Server removed: " + id)
+      )
+      .catch(err =>
+         logger("error", err)
+      );
 };
 
 // -------------------
@@ -111,11 +113,13 @@ exports.removeServer = function(id)
 
 exports.updateServerLang = function(id, lang, cb)
 {
-   return Servers.update({ lang: lang }, { where: { id: id } }).then(
-      function (err, result)
-      {
-         logger("error", err);
-      });
+   return Servers.update({ lang: lang }, { where: { id: id } })
+      .then(() =>
+         cb()
+      )
+      .catch(err =>
+         logger("error", err)
+      );
 };
 
 // ------------------
