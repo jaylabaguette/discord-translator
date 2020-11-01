@@ -87,7 +87,7 @@ const sendBox = function(data)
             );
             attachments.push(attachmentObj);
          }
-         data.webhook.send(data.text + ` ||[🔍](${data.originalUrl})||`, {
+         data.webhook.send(data.text + ` ||[🔍](<${data.originalUrl}>)||`, {
             username: data.author.name,
             avatarURL: data.author.icon_url,
             embeds: data.embeds,
