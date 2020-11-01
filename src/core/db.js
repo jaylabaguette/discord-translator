@@ -272,7 +272,7 @@ exports.addTask = function(task)
       Tasks.upsert({
          origin: task.origin,
          dest: dest,
-         reply: task.reply, // + task.origin.slice(-3),
+         reply: task.reply + task.origin.slice(-3),
          server: task.server,
          active: true,
          lang_to: task.to,
