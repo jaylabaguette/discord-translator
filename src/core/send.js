@@ -253,20 +253,7 @@ module.exports = function(data)
             sendData.origin = sendData.channel;
             sendData.channel = forwardChannel;
          }
-
-         if (process.env["DISCORD_WEBHOOK_" + data.forward])
-         {
-            const idToken = process.env["DISCORD_WEBHOOK_" + data.forward];
-            sendData.webhook = new discord.WebhookClient(
-               idToken.split("/")[0], idToken.split("/")[1]
-            );
-         }
-
-         //
-         // Error if bot cannot write to dest
-         //
-
-         else
+         else // Error if bot cannot write to dest
          {
             sendData.footer = null;
             sendData.embeds = null;
@@ -276,6 +263,18 @@ module.exports = function(data)
                `<#${forwardChannel.id}> channel.`;
 
             return sendBox(sendData);
+         }
+
+         //
+         // Environment Variables: DISCORD_WEBHOOK_{CHANNEL_ID}={WEBHOOK_ID}/{WEBHOOK_TOKEN}
+         // if present, webhook style will be used, to provide the best look by pretending username and avatar
+         //
+         if (process.env["DISCORD_WEBHOOK_" + data.forward])
+         {
+            const idToken = process.env["DISCORD_WEBHOOK_" + data.forward];
+            sendData.webhook = new discord.WebhookClient(
+               idToken.split("/")[0], idToken.split("/")[1]
+            );
          }
       }
 
