@@ -299,7 +299,10 @@ module.exports = function(data)
       if (data.author)
       {
          sendData.author = data.author;
-         sendData.author.username = data.message.member.displayName;
+         if (data.message.member)
+         {
+            sendData.author.username = data.message.member.displayName;
+         }
       }
    }
 
