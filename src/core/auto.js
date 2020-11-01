@@ -66,9 +66,13 @@ const analyzeRows = function(data, i)
 
       if (data.message.channel.type === "dm")
       {
+         console.log("auto dm: " + data.message.content);
          const replyIndex = data.message.content.indexOf(":");
          const reply = data.message.content.slice(0, replyIndex);
          const replyCon = data.message.content.slice(replyIndex + 1);
+         console.log("replyIndex: " + replyIndex);
+         console.log("reply: " + reply);
+         console.log("replyCon: " + replyCon);
 
          if (reply === row.reply)
          {
