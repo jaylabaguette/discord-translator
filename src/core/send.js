@@ -67,6 +67,13 @@ const sendBox = function(data)
       //fix CJK translated mention tag
       data.text = data.text.replace("<@！", "<@!");
 
+      //fix emoji
+      let i = 0;
+      data.text = data.text.replace(/<[：:].*?>/g, () =>
+      {
+         return data.originalContent.match(/<:.*?>/g)[i++];
+      });
+
       if (data.webhook)
       {
          var msgattachments = data.attachments.array();
@@ -202,7 +209,8 @@ module.exports = function(data)
       origin: null,
       bot: data.bot,
       webhook: null,
-      originalUrl: data.message.url
+      originalUrl: data.message.url,
+      originalContent: data.message.content
    };
 
    //
