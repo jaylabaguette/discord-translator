@@ -286,6 +286,10 @@ module.exports = function(data) //eslint-disable-line complexity
          data.color = data.message.roleColor;
          data.text = translateFix(res.text);
          data.showAuthor = true;
+
+         console.log(res.text);
+         console.log(opts);
+
          return getUserColor(data, botSend);
       });
    });
