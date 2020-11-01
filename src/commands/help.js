@@ -119,7 +119,7 @@ const helpMessage = function(config, botname, param)
    }) +
    helpSection({
       config: config,
-      title: "Stats (Not working)",
+      title: "Stats",
       link: "https://github.com/vkedwardli/discord-translator/wiki/Get-Statistics",
       icon: ":bar_chart:",
       cmd: "stats",
