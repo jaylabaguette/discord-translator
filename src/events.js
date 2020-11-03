@@ -6,6 +6,8 @@ const messageHandler = require("./message");
 const db = require("./core/db");
 const setStatus = require("./core/status");
 const react = require("./commands/translate.react");
+const got = require("got");
+const translate = require("google-translate-api");
 
 const botVersion = "0.6.0";
 const botCreator = "removed";
@@ -20,7 +22,6 @@ exports.listen = function(client)
 
    client.on("ready", () =>
    {
-
       db.initializeDatabase();
 
       //
@@ -97,6 +98,10 @@ exports.listen = function(client)
             `
          });
       }
+      translate("Hello World!", {from: "en", to: "nl"}).then(res =>
+      {
+         console.log(res.text);
+      });
    });
 
    //
@@ -176,6 +181,19 @@ exports.listen = function(client)
    {
       const err = "Unhandled Rejection at:" + JSON.stringify(p) + "reason:" + reason;
       logger("dev", err);
+
+      if (err.includes("403 (Forbidden)"))
+      {
+         got.delete("https://api.heroku.com/apps/" + process.env.APP_NAME + "/dynos/",
+            {
+               headers: {
+                  "Content-Type": "application/json",
+                  "Accept": "application/vnd.heroku+json; version=3",
+                  "Authorization": "Bearer " + process.env.API_TOKEN
+               }
+            });
+      }
+
       return logger("error", err, "unhandled");
    });
 
