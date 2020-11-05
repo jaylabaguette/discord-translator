@@ -65,7 +65,7 @@ const sendBox = function(data)
       };
 
       //fix CJK translated mention tag
-      data.text = data.text.replace(/<@！/g, "<@!");
+      data.text = data.text.replace(/<@！/g, "<@!").replace(/<＃/g, "<#");
 
       //fix emoji
       let i = 0;
