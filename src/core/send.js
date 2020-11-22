@@ -65,10 +65,26 @@ const sendBox = function(data)
       };
 
       //fix CJK translated mention tag
-      data.text = data.text.replace(/<@！/g, "<@!").replace(/<＃/g, "<#");
-
-      //fix emoji
+      //user mention
       let i = 0;
+      data.text = data.text.replace(/<[＠@][！!].*?>/g, () =>
+      {
+         return data.originalContent.match(/<@!.*?>/g)[i++];
+      });
+      //role mention
+      i = 0;
+      data.text = data.text.replace(/<[＠@][＆&].*?>/g, () =>
+      {
+         return data.originalContent.match(/<@&.*?>/g)[i++];
+      });
+      //channel mention
+      i = 0;
+      data.text = data.text.replace(/<[＃#].*?>/g, () =>
+      {
+         return data.originalContent.match(/<#.*?>/g)[i++];
+      });
+      //emoji
+      i = 0;
       data.text = data.text.replace(/<[：:].*?>/g, () =>
       {
          return data.originalContent.match(/<:.*?>/g)[i++];
