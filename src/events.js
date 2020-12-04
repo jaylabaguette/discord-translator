@@ -9,7 +9,7 @@ const react = require("./commands/translate.react");
 const got = require("got");
 const translate = require("google-translate-api");
 
-const botVersion = "0.6.0";
+const botVersion = require("../lib/version");
 const botCreator = "removed";
 
 exports.listen = function(client)

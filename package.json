@@ -9,7 +9,7 @@
   "license": "Unlicense",
   "scripts": {
     "start": "node build/bot",
-    "build": "gulp build",
+    "build": "genversion lib/version.js && gulp build",
     "dev": "gulp watch",
     "lint": "gulp lint",
     "test": "echo \"Error: no test specified\" && exit 1"
@@ -37,6 +37,7 @@
     "sequelize": "^6.3.5"
   },
   "devDependencies": {
+    "genversion": "^2.2.1",
     "gulp": "^4.0.0",
     "gulp-eslint": "^4.0.0",
     "gulp-line-ending-corrector": "^1.0.1",
