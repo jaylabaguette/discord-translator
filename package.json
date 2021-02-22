@@ -29,7 +29,7 @@
     "common-tags": "^1.7.2",
     "discord.js": "^11.3.0",
     "dotenv": "^5.0.1",
-    "google-translate-api": "vkedwardli/google-translate-api#batchexecute",
+    "google-translate-api": "vkedwardli/google-translate-api",
     "iso-639-1": "^1.3.0",
     "pg": "^8.4.2",
     "pg-hstore": "^2.3.2",
