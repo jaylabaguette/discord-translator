@@ -179,7 +179,7 @@ exports.listen = function(client)
 
    process.on("unhandledRejection", (reason, p) =>
    {
-      const err = "Unhandled Rejection at:" + JSON.stringify(p) + "reason:" + reason;
+      const err = "Unhandled Rejection at:" + JSON.stringify(p) + "\ncode:" + reason.code + "\n" + reason.stack;
       logger("dev", err);
 
       if (err.includes("403 (Forbidden)"))
