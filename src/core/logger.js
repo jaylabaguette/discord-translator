@@ -100,12 +100,10 @@ function convertObjToString(obj)
    else if (typeof obj === "function")
    {
       string.push(obj.toString());
-
-   //all other values can be done with JSON.stringify
    }
    else
    {
-      string.push(JSON.stringify(obj));
+      string.push(obj);
    }
 
    return string.join(",");
