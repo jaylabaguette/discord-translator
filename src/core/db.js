@@ -4,7 +4,6 @@ const logger = require("./logger");
 const Op = Sequelize.Op;
 const db = new Sequelize(process.env.DATABASE_URL, {
    logging: console.log,
-   native: true,
    dialect: 'postgres',
    dialectOptions: {
       ssl: {
