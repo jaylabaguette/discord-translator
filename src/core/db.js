@@ -3,7 +3,10 @@ const Sequelize = require("sequelize");
 const logger = require("./logger");
 const Op = Sequelize.Op;
 const db = new Sequelize(process.env.DATABASE_URL, {
-   logging: console.log
+   logging: console.log,
+   ssl: {
+      rejectUnauthorized: false
+   }
    //logging: null,
 });
 
