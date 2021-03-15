@@ -2,14 +2,16 @@ const autoTranslate = require("./auto");
 const Sequelize = require("sequelize");
 const logger = require("./logger");
 const Op = Sequelize.Op;
-const db = new Sequelize(process.env.DATABASE_URL, {
+const db = new Sequelize(`${process.env.DATABASE_URL}?sslmode=require`, {
    logging: console.log,
-   ssl: {
-      rejectUnauthorized: false
-   },
-   dialect: 'postgres',
-   dialectOptions: {
-      ssl: true
+   options: {
+      native: true,
+      dialect: 'postgres',
+      dialectOptions: {
+         ssl: {
+            rejectUnauthorized: false, // very important
+         }
+      }
    }
    //logging: null,
 });
