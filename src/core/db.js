@@ -6,6 +6,10 @@ const db = new Sequelize(process.env.DATABASE_URL, {
    logging: console.log,
    ssl: {
       rejectUnauthorized: false
+   },
+   dialect: 'postgres',
+   dialectOptions: {
+      ssl: true
    }
    //logging: null,
 });
